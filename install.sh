@@ -17,11 +17,17 @@ sudo apt-get install -y ebtables
 sudo apt-get install -y python-tox
 sudo pip install rpdb
 
+sleep 10
+
 # Setup Git and Gerrit
 git config --global user.name "Fernando Diaz"
 git config --global user.email "diazjf@us.ibm.com"
 git config --global --add gitreview.username "diazjf"
-ssh-keygen -t rsa
+ssh-keygen -f id_rsa -t rsa -N ''
+mv id_rsa .ssh/id_rsa
+mv id_rsa.pub .ssh/id_rsa.pub
+
+sleep 10
 
 # setup vim packages
 git clone https://github.com/gmarik/vundle.git /home/vagrant/.vim/bundle/vundle
@@ -68,7 +74,7 @@ cat <<EOF > local.conf
 disable_all_services
 enable_plugin barbican https://git.openstack.org/openstack/barbican
 enable_service rabbit mysql key
-#RECLONE=yes
+RECLONE=yes
 KEYSTONE_TOKEN_FORMAT=UUID
 DATABASE_PASSWORD=secretdatabase
 RABBIT_PASSWORD=secretrabbit
@@ -79,5 +85,12 @@ LOGFILE=/opt/stack/logs/stack.sh.log
 EOF
 sudo chown -R vagrant:vagrant /opt/stack/
 
+sleep 10
+
 cd devstack
 ./stack.sh
+
+sudo apt-get install -y python-tox
+cd /opt/stack
+git clone https://github.com/openstack/castellan.git
+git clone https://github.com/openstack/barbican-specs.git

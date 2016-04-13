@@ -14,7 +14,6 @@ sudo apt-get install -y python-tox
 sudo apt-get install -y libssl-dev
 sudo apt-get install -y libffi-dev
 sudo apt-get install -y ebtables
-sudo apt-get install -y python-tox
 sudo pip install rpdb
 
 sleep 10
@@ -66,6 +65,8 @@ EOF
 sudo vim +PluginInstall +qall
 sudo chown -R vagrant:vagrant /home/vagrant/.vim
 
+sleep 10
+
 # Setup devstack
 git clone https://github.com/openstack-dev/devstack /home/vagrant/devstack
 cd /home/vagrant/devstack
@@ -90,7 +91,11 @@ sleep 10
 cd devstack
 ./stack.sh
 
+sleep 10
+
+# Devstack removes python-tox
 sudo apt-get install -y python-tox
+
 cd /opt/stack
 git clone https://github.com/openstack/castellan.git
 git clone https://github.com/openstack/barbican-specs.git

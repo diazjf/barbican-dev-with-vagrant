@@ -1,20 +1,21 @@
 # Setup VM for Openstack Barbican Development.
 
 Steps:
-1.) Clone this repo
 
-2.) cd into it
+1. Clone this repo
 
-3.) Edit install.sh to your credentials
-    git config --global user.name "<your_name>"
-    git config --global user.email "<your_email"
-    git config --global --add gitreview.username "<your_username>"
+2. cd into it
 
-4.) vagrant up[1]
+3. Edit install.sh to your credentials
+    * `git config --global user.name "<your_name>"`
+    * `git config --global user.email "<your_email>"`
+    * `git config --global --add gitreview.username "<your_username>"`
 
-5.) vagrant ssh
+4. `vagrant up`[1]
 
-6.) screen -r stack
+5. `vagrant ssh`
+
+6. `screen -r stack` will show all the running screens.
 
 [1] You will need to install vagrant.
 See https://www.vagrantup.com/docs/installation/

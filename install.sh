@@ -76,6 +76,7 @@ disable_all_services
 enable_plugin barbican https://git.openstack.org/openstack/barbican
 enable_service rabbit mysql key
 RECLONE=yes
+HOST_IP=127.0.0.1
 KEYSTONE_TOKEN_FORMAT=UUID
 DATABASE_PASSWORD=secretdatabase
 RABBIT_PASSWORD=secretrabbit

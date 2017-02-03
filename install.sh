@@ -96,6 +96,7 @@ sleep 10
 
 # Devstack removes python-tox
 sudo apt-get install -y python-tox
+sudo pip install tox --upgrade
 
 cd /opt/stack
 git clone https://github.com/openstack/castellan.git

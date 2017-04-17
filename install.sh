@@ -16,7 +16,7 @@ sudo apt-get install -y libffi-dev
 sudo apt-get install -y ebtables
 sudo pip install rpdb
 
-sleep 10
+sleep 5
 
 # Setup Git and Gerrit
 git config --global user.name "Fernando Diaz"
@@ -26,10 +26,10 @@ ssh-keygen -f id_rsa -t rsa -N ''
 mv id_rsa .ssh/id_rsa
 mv id_rsa.pub .ssh/id_rsa.pub
 
-sleep 10
+sleep 5
 
-# setup vim packages
-git clone https://github.com/gmarik/vundle.git /home/vagrant/.vim/bundle/vundle
+# Setup Vim Packages
+sudo git clone https://github.com/gmarik/vundle.git /home/ubuntu/.vim/bundle/vundle
 cat <<EOF > .vimrc
 set nocompatible
 filetype off
@@ -63,18 +63,18 @@ augroup vimrc_autocmds
 filetype plugin indent on
 EOF
 sudo vim +PluginInstall +qall
-sudo chown -R vagrant:vagrant /home/vagrant/.vim
+sudo chown -R ubuntu:ubuntu /home/ubuntu/.vim
 
-sleep 10
+sleep 5
 
-# Setup devstack
-git clone https://github.com/openstack-dev/devstack /home/vagrant/devstack
-cd /home/vagrant/devstack
+# Setup Devstack
+git clone https://github.com/openstack-dev/devstack /home/ubuntu/devstack
+cd /home/ubuntu/devstack
 cat <<EOF > local.conf
 [[local|localrc]]
 disable_all_services
-enable_plugin barbican https://git.openstack.org/openstack/barbican
 enable_service rabbit mysql key
+enable_plugin barbican https://git.openstack.org/openstack/barbican
 RECLONE=yes
 HOST_IP=127.0.0.1
 KEYSTONE_TOKEN_FORMAT=UUID
@@ -85,7 +85,7 @@ SERVICE_PASSWORD=secretservice
 SERVICE_TOKEN=111222333444
 LOGFILE=/opt/stack/logs/stack.sh.log
 EOF
-sudo chown -R vagrant:vagrant /opt/stack/
+sudo chown -R ubuntu:ubuntu /opt/stack/
 
 sleep 10
 
@@ -94,10 +94,11 @@ cd devstack
 
 sleep 10
 
-# Devstack removes python-tox
+# Devstack removes python-tox, so reinstall
 sudo apt-get install -y python-tox
 sudo pip install tox --upgrade
 
+# Add Other Common Key-Management Projects
 cd /opt/stack
 git clone https://github.com/openstack/castellan.git
 git clone https://github.com/openstack/barbican-specs.git

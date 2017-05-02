@@ -4,12 +4,11 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/xenial64"
 
-  # Barbican Ports
+  # Barbican Port
   config.vm.network "forwarded_port", guest: 9311, host: 9311
 
-  # Keystone Ports
-  config.vm.network "forwarded_port", guest: 35357, host: 35357
-  config.vm.network "forwarded_port", guest: 5000, host: 5000
+  # Keystone Port
+  config.vm.network "forwarded_port", guest: 80, host: 8080
 
   config.vm.provider "virtualbox" do |vb|
       vb.gui = false

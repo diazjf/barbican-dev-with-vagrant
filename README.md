@@ -15,7 +15,9 @@ Steps:
 
 5. `vagrant ssh`
 
-6. `screen -r stack` will show all the running screens.
+6. `sudo systemctl status "devstack@*"` to check if services are running.
+
+7. Patch the required service https://docs.openstack.org/devstack/latest/development.html#patching-a-service
 
 [1] You will need to install vagrant.
 See https://www.vagrantup.com/docs/installation/

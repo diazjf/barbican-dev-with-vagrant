@@ -6,7 +6,6 @@ sudo apt-get install -y git
 sudo apt-get install -y curl
 sudo apt-get install -y vim
 sudo apt-get install -y git-review
-sudo apt-get install -y python-pip
 sudo apt-get install -y python2.7-dev
 sudo apt-get install -y python3.4
 sudo apt-get install -y python3.4-dev
@@ -14,6 +13,10 @@ sudo apt-get install -y python-tox
 sudo apt-get install -y libssl-dev
 sudo apt-get install -y libffi-dev
 sudo apt-get install -y ebtables
+
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+sudo python get-pip.py --force-reinstall
+
 sudo pip install rpdb
 
 sleep 5
@@ -29,12 +32,12 @@ mv id_rsa.pub .ssh/id_rsa.pub
 sleep 5
 
 # Setup Vim Packages
-sudo git clone https://github.com/gmarik/vundle.git /home/ubuntu/.vim/bundle/vundle
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 cat <<EOF > .vimrc
 set nocompatible
 filetype off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 Bundle 'gmarik/vundle'
 Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
@@ -60,16 +63,21 @@ augroup vimrc_autocmds
     autocmd FileType python match Excess /\%120v.*/
     autocmd FileType python set nowrap
     augroup END
+call vundle#end()
 filetype plugin indent on
 EOF
 sudo vim +PluginInstall +qall
-sudo chown -R ubuntu:ubuntu /home/ubuntu/.vim
 
 sleep 5
 
+# Create Stack User
+sudo useradd -s /bin/bash -d /opt/stack -m stack
+echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
+sudo su - stack
+
 # Setup Devstack
-git clone https://github.com/openstack-dev/devstack /home/ubuntu/devstack
-cd /home/ubuntu/devstack
+git clone https://github.com/openstack-dev/devstack
+cd devstack
 cat <<EOF > local.conf
 [[local|localrc]]
 disable_all_services
@@ -77,7 +85,7 @@ enable_service rabbit mysql key
 enable_plugin barbican https://git.openstack.org/openstack/barbican
 RECLONE=yes
 HOST_IP=127.0.0.1
-KEYSTONE_TOKEN_FORMAT=UUID
+KEYSTONE_TOKEN_FORMAT=FERNET
 DATABASE_PASSWORD=secretdatabase
 RABBIT_PASSWORD=secretrabbit
 ADMIN_PASSWORD=secretadmin
@@ -85,20 +93,13 @@ SERVICE_PASSWORD=secretservice
 SERVICE_TOKEN=111222333444
 LOGFILE=/opt/stack/logs/stack.sh.log
 EOF
-sudo chown -R ubuntu:ubuntu /opt/stack/
 
-sleep 10
+sleep 5
 
-cd devstack
 ./stack.sh
 
-sleep 10
-
-# Devstack removes python-tox, so reinstall
-sudo apt-get install -y python-tox
-sudo pip install tox --upgrade
+sleep 5
 
 # Add Other Common Key-Management Projects
-cd /opt/stack
 git clone https://github.com/openstack/castellan.git
 git clone https://github.com/openstack/barbican-specs.git
